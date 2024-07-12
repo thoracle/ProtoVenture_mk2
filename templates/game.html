@@ -62,11 +62,28 @@
         </div>
         <div class="options">
             <form method="POST" action="{{ url_for('game') }}">
-                {% for option in options %}
-                <button type="submit" name="choice" value="{{ option }}" class="option-btn">{{ option }}</button>
-                {% endfor %}
+                {% if options %}
+                    {% for option in options %}
+                        <button type="submit" name="choice" value="{{ option }}" class="option-btn">{{ option }}</button>
+                    {% endfor %}
+                {% else %}
+                    <button type="submit" name="choice" value="Start Game" class="option-btn">Start Game</button>
+                {% endif %}
             </form>
         </div>
     </div>
 </body>
 </html>
+```
+
+The main changes in this revised version are:
+
+1. In the options section, we've added a conditional statement to check if options are provided:
+   ```html
+   {% if options %}
+       {% for option in options %}
+           <button type="submit" name="choice" value="{{ option }}" class="option-btn">{{ option }}</button>
+       {% endfor %}
+   {% else %}
+       <button type="submit" name="choice" value="Start Game" class="option-btn">Start Game</button>
+   {% endif %}
