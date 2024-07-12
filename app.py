@@ -10,6 +10,7 @@ class GameState:
         self.location = "Dragonhome"
         self.reputation = {"Dragon Riders": 50, "Mage Guild": 50, "Merchants": 50}
         self.dragon = None
+        self.inventory = {"Gold": 100}
 
 game_state = GameState()
 
@@ -25,23 +26,29 @@ locations = {
     },
     "Mage Quarter": {
         "description": "The air crackles with magical energy in this part of the city.",
-        "options": ["Speak with the Archmage", "Return to Dragonhome"]
+        "options": ["Speak with the Archmage", "Buy a Spell Book", "Return to Dragonhome"]
     },
     "Marketplace": {
         "description": "A bustling area filled with merchants from all over the realm.",
-        "options": ["Negotiate with merchants", "Return to Dragonhome"]
+        "options": ["Buy Dragon Food", "Sell Items", "Return to Dragonhome"]
     }
 }
 
 @app.route('/')
 def home():
-    return render_template('game.html', message="Welcome to Dragon Rider's Quest!", location=game_state.location, options=locations[game_state.location]["options"])
+    return render_template('game.html', message="Welcome to Dragon Rider's Quest!", 
+                           location=game_state.location, 
+                           options=locations[game_state.location]["options"],
+                           inventory=game_state.inventory)
 
 @app.route('/game', methods=['POST'])
 def game():
     choice = request.form['choice']
     message = process_choice(choice)
-    return render_template('game.html', message=message, location=game_state.location, options=locations[game_state.location]["options"])
+    return render_template('game.html', message=message, 
+                           location=game_state.location, 
+                           options=locations[game_state.location]["options"],
+                           inventory=game_state.inventory)
 
 def process_choice(choice):
     if choice == "Visit the Dragon Roost":
@@ -63,14 +70,31 @@ def process_choice(choice):
     elif choice == "Speak with the Archmage":
         game_state.reputation["Mage Guild"] += 5
         return "The Archmage shares some magical wisdom. Your reputation with the Mage Guild has slightly increased."
-    elif choice == "Negotiate with merchants":
-        success = random.choice([True, False])
-        if success:
-            game_state.reputation["Merchants"] += 5
-            return "Your negotiation was successful. Your reputation with the Merchants has slightly increased."
+    elif choice == "Buy a Spell Book":
+        if game_state.inventory["Gold"] >= 50:
+            game_state.inventory["Gold"] -= 50
+            game_state.inventory["Spell Book"] = game_state.inventory.get("Spell Book", 0) + 1
+            return "You bought a Spell Book for 50 Gold."
         else:
-            game_state.reputation["Merchants"] -= 5
-            return "Your negotiation failed. Your reputation with the Merchants has slightly decreased."
+            return "You don't have enough Gold to buy a Spell Book."
+    elif choice == "Buy Dragon Food":
+        if game_state.inventory["Gold"] >= 20:
+            game_state.inventory["Gold"] -= 20
+            game_state.inventory["Dragon Food"] = game_state.inventory.get("Dragon Food", 0) + 1
+            return "You bought Dragon Food for 20 Gold."
+        else:
+            return "You don't have enough Gold to buy Dragon Food."
+    elif choice == "Sell Items":
+        if "Spell Book" in game_state.inventory and game_state.inventory["Spell Book"] > 0:
+            game_state.inventory["Spell Book"] -= 1
+            game_state.inventory["Gold"] += 30
+            return "You sold a Spell Book for 30 Gold."
+        elif "Dragon Food" in game_state.inventory and game_state.inventory["Dragon Food"] > 0:
+            game_state.inventory["Dragon Food"] -= 1
+            game_state.inventory["Gold"] += 15
+            return "You sold Dragon Food for 15 Gold."
+        else:
+            return "You have nothing to sell."
     elif choice == "Return to Dragonhome":
         game_state.location = "Dragonhome"
         return "You return to Dragonhome. " + locations["Dragonhome"]["description"]
