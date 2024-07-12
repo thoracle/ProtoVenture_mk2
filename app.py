@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, session
 import random
+import json
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # Replace with a real secret key
@@ -12,6 +13,25 @@ class GameState:
         self.dragon = None
         self.inventory = {"Gold": 100}
         self.message = "Welcome to Dragon Rider's Quest!"
+
+    def to_dict(self):
+        return {
+            'location': self.location,
+            'reputation': self.reputation,
+            'dragon': self.dragon,
+            'inventory': self.inventory,
+            'message': self.message
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        state = cls()
+        state.location = data['location']
+        state.reputation = data['reputation']
+        state.dragon = data['dragon']
+        state.inventory = data['inventory']
+        state.message = data['message']
+        return state
 
 # Game content
 locations = {
@@ -38,23 +58,25 @@ item_prices = {
     "Dragon Food": {"buy": 20, "sell": 15}
 }
 
-game_state = GameState()
-
 @app.route('/')
 def home():
+    game_state = GameState()
+    session['game_state'] = json.dumps(game_state.to_dict())
     return render_template('game.html', game_state=game_state, 
                            options=locations[game_state.location]["options"])
 
 @app.route('/game', methods=['POST'])
 def game():
+    game_state = GameState.from_dict(json.loads(session['game_state']))
     choice = request.form['choice']
     if choice.startswith("Sell "):
         item = choice[5:]  # Remove "Sell " prefix
         sell_item(game_state, item)
+        options = locations[game_state.location]["options"]
     else:
-        process_choice(game_state, choice)
-    return render_template('game.html', game_state=game_state, 
-                           options=locations[game_state.location]["options"])
+        options = process_choice(game_state, choice)
+    session['game_state'] = json.dumps(game_state.to_dict())
+    return render_template('game.html', game_state=game_state, options=options)
 
 def process_choice(state, choice):
     if choice == "Visit the Dragon Roost":
@@ -87,7 +109,6 @@ def process_choice(state, choice):
             return [f"Sell {item}" for item in sellable_items]
         else:
             state.message = "You don't have any items to sell."
-            return locations[state.location]["options"]
     elif choice == "Return to Dragonhome":
         state.location = "Dragonhome"
         state.message = "You return to Dragonhome. " + locations["Dragonhome"]["description"]
