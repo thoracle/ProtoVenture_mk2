@@ -153,6 +153,7 @@ def sell_item(state, item):
             del state.inventory[item]
         state.message = f"You sold a {item} for {item_prices[item]['sell']} Gold."
     else:
+        logger.debug(f"Inventory item count on fail selling: {state.inventory[item]}")
         state.message = f"You don't have any {item} to sell."
     logger.debug(f"Inventory after selling: {state.inventory}")
 
