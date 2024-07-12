@@ -13,8 +13,6 @@ class GameState:
         self.inventory = {"Gold": 100}
         self.message = "Welcome to Dragon Rider's Quest!"
 
-game_state = GameState()
-
 # Game content
 locations = {
     "Dragonhome": {
@@ -40,6 +38,8 @@ item_prices = {
     "Dragon Food": {"buy": 20, "sell": 15}
 }
 
+game_state = GameState()
+
 @app.route('/')
 def home():
     return render_template('game.html', game_state=game_state, 
@@ -50,67 +50,67 @@ def game():
     choice = request.form['choice']
     if choice.startswith("Sell "):
         item = choice[5:]  # Remove "Sell " prefix
-        sell_item(item)
+        sell_item(game_state, item)
     else:
-        process_choice(choice)
+        process_choice(game_state, choice)
     return render_template('game.html', game_state=game_state, 
                            options=locations[game_state.location]["options"])
 
-def process_choice(choice):
+def process_choice(state, choice):
     if choice == "Visit the Dragon Roost":
-        game_state.location = "Dragon Roost"
-        game_state.message = "You head to the Dragon Roost. " + locations["Dragon Roost"]["description"]
+        state.location = "Dragon Roost"
+        state.message = "You head to the Dragon Roost. " + locations["Dragon Roost"]["description"]
     elif choice == "Go to the Mage Quarter":
-        game_state.location = "Mage Quarter"
-        game_state.message = "You enter the Mage Quarter. " + locations["Mage Quarter"]["description"]
+        state.location = "Mage Quarter"
+        state.message = "You enter the Mage Quarter. " + locations["Mage Quarter"]["description"]
     elif choice == "Head to the Marketplace":
-        game_state.location = "Marketplace"
-        game_state.message = "You arrive at the Marketplace. " + locations["Marketplace"]["description"]
+        state.location = "Marketplace"
+        state.message = "You arrive at the Marketplace. " + locations["Marketplace"]["description"]
     elif choice == "Choose a dragon":
-        if game_state.dragon is None:
-            game_state.dragon = random.choice(["Fire Drake", "Storm Wyrm", "Frost Serpent"])
-            game_state.reputation["Dragon Riders"] += 10
-            game_state.message = f"You have bonded with a {game_state.dragon}! Your reputation with the Dragon Riders has increased."
+        if state.dragon is None:
+            state.dragon = random.choice(["Fire Drake", "Storm Wyrm", "Frost Serpent"])
+            state.reputation["Dragon Riders"] += 10
+            state.message = f"You have bonded with a {state.dragon}! Your reputation with the Dragon Riders has increased."
         else:
-            game_state.message = "You already have a dragon companion."
+            state.message = "You already have a dragon companion."
     elif choice == "Speak with the Archmage":
-        game_state.reputation["Mage Guild"] += 5
-        game_state.message = "The Archmage shares some magical wisdom. Your reputation with the Mage Guild has slightly increased."
+        state.reputation["Mage Guild"] += 5
+        state.message = "The Archmage shares some magical wisdom. Your reputation with the Mage Guild has slightly increased."
     elif choice == "Buy a Spell Book":
-        buy_item("Spell Book")
+        buy_item(state, "Spell Book")
     elif choice == "Buy Dragon Food":
-        buy_item("Dragon Food")
+        buy_item(state, "Dragon Food")
     elif choice == "Sell Items":
-        sellable_items = [item for item, quantity in game_state.inventory.items() if item != "Gold" and quantity > 0]
+        sellable_items = [item for item, quantity in state.inventory.items() if item != "Gold" and quantity > 0]
         if sellable_items:
-            game_state.message = "Select an item to sell:"
+            state.message = "Select an item to sell:"
             return [f"Sell {item}" for item in sellable_items]
         else:
-            game_state.message = "You don't have any items to sell."
+            state.message = "You don't have any items to sell."
     elif choice == "Return to Dragonhome":
-        game_state.location = "Dragonhome"
-        game_state.message = "You return to Dragonhome. " + locations["Dragonhome"]["description"]
+        state.location = "Dragonhome"
+        state.message = "You return to Dragonhome. " + locations["Dragonhome"]["description"]
     else:
-        game_state.message = "Invalid choice. Please try again."
-    return locations[game_state.location]["options"]
+        state.message = "Invalid choice. Please try again."
+    return locations[state.location]["options"]
 
-def buy_item(item):
-    if game_state.inventory["Gold"] >= item_prices[item]["buy"]:
-        game_state.inventory["Gold"] -= item_prices[item]["buy"]
-        game_state.inventory[item] = game_state.inventory.get(item, 0) + 1
-        game_state.message = f"You bought a {item} for {item_prices[item]['buy']} Gold."
+def buy_item(state, item):
+    if state.inventory["Gold"] >= item_prices[item]["buy"]:
+        state.inventory["Gold"] -= item_prices[item]["buy"]
+        state.inventory[item] = state.inventory.get(item, 0) + 1
+        state.message = f"You bought a {item} for {item_prices[item]['buy']} Gold."
     else:
-        game_state.message = f"You don't have enough Gold to buy a {item}."
+        state.message = f"You don't have enough Gold to buy a {item}."
 
-def sell_item(item):
-    if item in game_state.inventory and game_state.inventory[item] > 0:
-        game_state.inventory[item] -= 1
-        game_state.inventory["Gold"] += item_prices[item]["sell"]
-        if game_state.inventory[item] == 0:
-            del game_state.inventory[item]
-        game_state.message = f"You sold a {item} for {item_prices[item]['sell']} Gold."
+def sell_item(state, item):
+    if item in state.inventory and state.inventory[item] > 0:
+        state.inventory[item] -= 1
+        state.inventory["Gold"] += item_prices[item]["sell"]
+        if state.inventory[item] == 0:
+            del state.inventory[item]
+        state.message = f"You sold a {item} for {item_prices[item]['sell']} Gold."
     else:
-        game_state.message = f"You don't have any {item} to sell."
+        state.message = f"You don't have any {item} to sell."
 
 if __name__ == '__main__':
     app.run(debug=True)
