@@ -62,13 +62,9 @@
         </div>
         <div class="options">
             <form method="POST" action="{{ url_for('game') }}">
-                {% if options %}
-                    {% for option in options %}
-                        <button type="submit" name="choice" value="{{ option }}" class="option-btn">{{ option }}</button>
-                    {% endfor %}
-                {% else %}
-                    <button type="submit" name="choice" value="Start Game" class="option-btn">Start Game</button>
-                {% endif %}
+                {% for option in options %}
+                <button type="submit" name="choice" value="{{ option }}" class="option-btn">{{ option }}</button>
+                {% endfor %}
             </form>
         </div>
     </div>
