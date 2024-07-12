@@ -11,14 +11,26 @@
             margin: 0;
             padding: 0;
         }
-        .chat-container {
-            max-width: 600px;
+        .game-container {
+            display: flex;
+            max-width: 800px;
             margin: 20px auto;
+        }
+        .chat-container {
+            flex: 2;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            margin-right: 20px;
         }
-        .chat-header {
+        .inventory-container {
+            flex: 1;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .chat-header, .inventory-header {
             background-color: #5682a3;
             color: white;
             padding: 10px;
@@ -53,23 +65,35 @@
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <h2>Dragon Rider's Quest</h2>
+    <div class="game-container">
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2>Dragon Rider's Quest</h2>
+            </div>
+            <div class="chat-messages">
+                <div class="message">{{ message }}</div>
+            </div>
+            <div class="options">
+                <form method="POST" action="{{ url_for('game') }}">
+                    {% if options %}
+                        {% for option in options %}
+                            <button type="submit" name="choice" value="{{ option }}" class="option-btn">{{ option }}</button>
+                        {% endfor %}
+                    {% else %}
+                        <button type="submit" name="choice" value="Start Game" class="option-btn">Start Game</button>
+                    {% endif %}
+                </form>
+            </div>
         </div>
-        <div class="chat-messages">
-            <div class="message">{{ message }}</div>
-        </div>
-        <div class="options">
-            <form method="POST" action="{{ url_for('game') }}">
-                {% if options %}
-                    {% for option in options %}
-                        <button type="submit" name="choice" value="{{ option }}" class="option-btn">{{ option }}</button>
-                    {% endfor %}
-                {% else %}
-                    <button type="submit" name="choice" value="Start Game" class="option-btn">Start Game</button>
-                {% endif %}
-            </form>
+        <div class="inventory-container">
+            <div class="inventory-header">
+                <h2>Inventory</h2>
+            </div>
+            <ul>
+                {% for item, quantity in inventory.items() %}
+                    <li>{{ item }}: {{ quantity }}</li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 </body>
