@@ -18,6 +18,7 @@ class GameState:
         self.dragon = None
         self.inventory = {"Gold": 100}
         self.message = "Welcome to Dragon Rider's Quest!"
+        self.quests = []  # Initialize with an empty list of quests
 
     def to_dict(self):
         return {
@@ -25,7 +26,8 @@ class GameState:
             'reputation': self.reputation,
             'dragon': self.dragon,
             'inventory': self.inventory,
-            'message': self.message
+            'message': self.message,
+            'quests': self.quests
         }
 
     @classmethod
@@ -36,6 +38,7 @@ class GameState:
         state.dragon = data['dragon']
         state.inventory = data['inventory']
         state.message = data['message']
+        state.quests = data['quests']
         return state
 
 # Game content
@@ -111,11 +114,15 @@ def process_choice(state, choice):
             state.dragon = random.choice(["Fire Drake", "Storm Wyrm", "Frost Serpent"])
             state.reputation["Dragon Riders"] += 10
             state.message = f"You have bonded with a {state.dragon}! Your reputation with the Dragon Riders has increased."
+            if "Bond with a dragon" not in state.quests:
+                state.quests.append("Bond with a dragon")
         else:
             state.message = "You already have a dragon companion."
     elif choice == "Speak with the Archmage":
         state.reputation["Mage Guild"] += 5
         state.message = "The Archmage shares some magical wisdom. Your reputation with the Mage Guild has slightly increased."
+        if "Learn basic spells" not in state.quests:
+            state.quests.append("Learn basic spells")
     elif choice == "Buy a Spell Book":
         buy_item(state, "Spell Book")
     elif choice == "Buy Dragon Food":
@@ -134,7 +141,6 @@ def process_choice(state, choice):
         state.message = "Invalid choice. Please try again."
     return locations[state.location]["options"]
 
-
 def buy_item(state, item):
     logger.debug(f"Buying item: {item}")
     logger.debug(f"Inventory before buying: {state.inventory}")
@@ -142,6 +148,10 @@ def buy_item(state, item):
         state.inventory["Gold"] -= item_prices[item]["buy"]
         state.inventory[item] = state.inventory.get(item, 0) + 1
         state.message = f"You bought a {item} for {item_prices[item]['buy']} Gold."
+        if item == "Spell Book" and "Study your Spell Book" not in state.quests:
+            state.quests.append("Study your Spell Book")
+        elif item == "Dragon Food" and "Feed your dragon" not in state.quests:
+            state.quests.append("Feed your dragon")
     else:
         state.message = f"You don't have enough Gold to buy a {item}."
     logger.debug(f"Inventory after buying: {state.inventory}")
