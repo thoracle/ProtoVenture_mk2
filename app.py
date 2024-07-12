@@ -87,6 +87,7 @@ def process_choice(state, choice):
             return [f"Sell {item}" for item in sellable_items]
         else:
             state.message = "You don't have any items to sell."
+            return locations[state.location]["options"]
     elif choice == "Return to Dragonhome":
         state.location = "Dragonhome"
         state.message = "You return to Dragonhome. " + locations["Dragonhome"]["description"]
