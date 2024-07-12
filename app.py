@@ -35,7 +35,7 @@ locations = {
 
 @app.route('/')
 def home():
-    return render_template('game.html', message="Welcome to Dragon Rider's Quest!")
+    return render_template('game.html', message="Welcome to Dragon Rider's Quest!", location=game_state.location, options=locations[game_state.location]["options"])
 
 @app.route('/game', methods=['POST'])
 def game():
