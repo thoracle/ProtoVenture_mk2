@@ -23,14 +23,14 @@
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
             margin-right: 20px;
         }
-        .inventory-container {
+        .info-container {
             flex: 1;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
             padding: 20px;
         }
-        .chat-header, .inventory-header {
+        .chat-header, .info-header {
             background-color: #5682a3;
             color: white;
             padding: 10px;
@@ -62,6 +62,32 @@
             border-radius: 4px;
             cursor: pointer;
         }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        .tab button.active {
+            background-color: #ccc;
+        }
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
     </style>
 </head>
 <body>
@@ -75,26 +101,72 @@
             </div>
             <div class="options">
                 <form method="POST" action="{{ url_for('game') }}">
-                    {% if options is string %}
-                        <button type="submit" name="choice" value="{{ options }}" class="option-btn">{{ options }}</button>
-                    {% else %}
-                        {% for option in options %}
-                            <button type="submit" name="choice" value="{{ option }}" class="option-btn">{{ option }}</button>
-                        {% endfor %}
-                    {% endif %}
+                    {% for option in options %}
+                        <button type="submit" name="choice" value="{{ option }}" class="option-btn">{{ option }}</button>
+                    {% endfor %}
                 </form>
             </div>
         </div>
-        <div class="inventory-container">
-            <div class="inventory-header">
-                <h2>Inventory</h2>
+        <div class="info-container">
+            <div class="info-header">
+                <h2>Player Info</h2>
             </div>
-            <ul>
-                {% for item, quantity in game_state.inventory.items() %}
-                    <li>{{ item }}: {{ quantity }}</li>
-                {% endfor %}
-            </ul>
+            <div class="tab">
+                <button class="tablinks" onclick="openTab(event, 'Inventory')" id="defaultOpen">Inventory</button>
+                <button class="tablinks" onclick="openTab(event, 'Faction')">Faction</button>
+                <button class="tablinks" onclick="openTab(event, 'Quests')">Quests</button>
+            </div>
+
+            <div id="Inventory" class="tabcontent">
+                <h3>Inventory</h3>
+                <ul>
+                    {% for item, quantity in game_state.inventory.items() %}
+                        <li>{{ item }}: {{ quantity }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div id="Faction" class="tabcontent">
+                <h3>Faction Standings</h3>
+                <ul>
+                    {% for faction, standing in game_state.reputation.items() %}
+                        <li>{{ faction }}: {{ standing }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div id="Quests" class="tabcontent">
+                <h3>Active Quests</h3>
+                <ul>
+                    {% if game_state.quests %}
+                        {% for quest in game_state.quests %}
+                            <li>{{ quest }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No active quests</li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
     </div>
+
+    <script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+    </script>
 </body>
 </html>
