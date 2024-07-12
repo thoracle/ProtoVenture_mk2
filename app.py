@@ -81,8 +81,13 @@ def process_choice(choice):
     elif choice == "Buy Dragon Food":
         buy_item("Dragon Food")
     elif choice == "Sell Items":
-        game_state.message = "Select an item to sell:"
-        return [f"Sell {item}" for item, quantity in game_state.inventory.items() if item != "Gold" and quantity > 0]
+        sellable_items = [item for item, quantity in game_state.inventory.items() if item != "Gold" and quantity > 0]
+        if sellable_items:
+            game_state.message = "Select an item to sell:"
+            return [f"Sell {item}" for item in sellable_items]
+        else:
+            game_state.message = "You don't have any items to sell."
+            return locations[game_state.location]["options"]
     elif choice == "Return to Dragonhome":
         game_state.location = "Dragonhome"
         game_state.message = "You return to Dragonhome. " + locations["Dragonhome"]["description"]
@@ -105,7 +110,7 @@ def sell_item(item):
             del game_state.inventory[item]
         game_state.message = f"You sold a {item} for {item_prices[item]['sell']} Gold."
     else:
-        game_state.message = f"You don't have a {item} to sell."
+        game_state.message = f"You don't have any {item} to sell."
 
 if __name__ == '__main__':
     app.run(debug=True)
