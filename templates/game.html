@@ -71,16 +71,16 @@
                 <h2>Dragon Rider's Quest</h2>
             </div>
             <div class="chat-messages">
-                <div class="message">{{ message }}</div>
+                <div class="message">{{ game_state.message }}</div>
             </div>
             <div class="options">
                 <form method="POST" action="{{ url_for('game') }}">
-                    {% if options %}
+                    {% if options is string %}
+                        <button type="submit" name="choice" value="{{ options }}" class="option-btn">{{ options }}</button>
+                    {% else %}
                         {% for option in options %}
                             <button type="submit" name="choice" value="{{ option }}" class="option-btn">{{ option }}</button>
                         {% endfor %}
-                    {% else %}
-                        <button type="submit" name="choice" value="Start Game" class="option-btn">Start Game</button>
                     {% endif %}
                 </form>
             </div>
@@ -90,7 +90,7 @@
                 <h2>Inventory</h2>
             </div>
             <ul>
-                {% for item, quantity in inventory.items() %}
+                {% for item, quantity in game_state.inventory.items() %}
                     <li>{{ item }}: {{ quantity }}</li>
                 {% endfor %}
             </ul>
