@@ -134,6 +134,7 @@ def process_choice(state, choice):
         state.message = "Invalid choice. Please try again."
     return locations[state.location]["options"]
 
+
 def buy_item(state, item):
     logger.debug(f"Buying item: {item}")
     logger.debug(f"Inventory before buying: {state.inventory}")
