@@ -44,10 +44,10 @@ class TestDragonRiderQuest(unittest.TestCase):
         self.assertIn("Sell Spell Book", options)
 
     def test_process_choice_sell_items_none_available(self):
-    self.game_state.location = "Marketplace"  # Ensure we're in the Marketplace
-    options = process_choice(self.game_state, "Sell Items")
-    self.assertEqual(self.game_state.message, "You don't have any items to sell.")
-    self.assertEqual(options, locations["Marketplace"]["options"])
+        self.game_state.location = "Marketplace"  # Ensure we're in the Marketplace
+        options = process_choice(self.game_state, "Sell Items")
+        self.assertEqual(self.game_state.message, "You don't have any items to sell.")
+        self.assertEqual(options, locations["Marketplace"]["options"])
 
 if __name__ == '__main__':
     unittest.main()
