@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dragon Rider's Quest</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e6ebee;
+            margin: 0;
+            padding: 0;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .chat-header {
+            background-color: #5682a3;
+            color: white;
+            padding: 10px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .chat-messages {
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .message {
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .options {
+            padding: 20px;
+        }
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #5682a3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Dragon Rider's Quest</h2>
+        </div>
+        <div class="chat-messages">
+            <div class="message">{{ message }}</div>
+        </div>
+        <div class="options">
+            <form method="POST" action="{{ url_for('game') }}">
+                {% for option in options %}
+                <button type="submit" name="choice" value="{{ option }}" class="option-btn">{{ option }}</button>
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+</body>
+</html>
