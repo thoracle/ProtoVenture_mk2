@@ -45,7 +45,8 @@ class TestDragonRiderQuest(unittest.TestCase):
 
     def test_process_choice_sell_items_none_available(self):
         options = process_choice("Sell Items")
-        self.assertNotIn("Sell", " ".join(options))
+        self.assertEqual(self.game_state.message, "You don't have any items to sell.")
+        self.assertEqual(options, locations["Marketplace"]["options"])
 
 if __name__ == '__main__':
     unittest.main()
