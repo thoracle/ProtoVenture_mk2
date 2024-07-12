@@ -57,6 +57,7 @@ def game():
                            options=locations[game_state.location]["options"])
 
 def process_choice(choice):
+    global game_state
     if choice == "Visit the Dragon Roost":
         game_state.location = "Dragon Roost"
         game_state.message = "You head to the Dragon Roost. " + locations["Dragon Roost"]["description"]
@@ -87,14 +88,15 @@ def process_choice(choice):
             return [f"Sell {item}" for item in sellable_items]
         else:
             game_state.message = "You don't have any items to sell."
-            return locations[game_state.location]["options"]
     elif choice == "Return to Dragonhome":
         game_state.location = "Dragonhome"
         game_state.message = "You return to Dragonhome. " + locations["Dragonhome"]["description"]
     else:
         game_state.message = "Invalid choice. Please try again."
+    return locations[game_state.location]["options"]
 
 def buy_item(item):
+    global game_state
     if game_state.inventory["Gold"] >= item_prices[item]["buy"]:
         game_state.inventory["Gold"] -= item_prices[item]["buy"]
         game_state.inventory[item] = game_state.inventory.get(item, 0) + 1
@@ -103,6 +105,7 @@ def buy_item(item):
         game_state.message = f"You don't have enough Gold to buy a {item}."
 
 def sell_item(item):
+    global game_state
     if item in game_state.inventory and game_state.inventory[item] > 0:
         game_state.inventory[item] -= 1
         game_state.inventory["Gold"] += item_prices[item]["sell"]
