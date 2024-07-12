@@ -80,7 +80,9 @@ def game():
     choice = request.form['choice']
     logger.debug(f"User choice: {choice}")
     
-    if choice.startswith("Sell "):
+    if choice == "Sell Items":
+        options = process_choice(game_state, choice)
+    elif choice.startswith("Sell "):
         item = choice[5:]  # Remove "Sell " prefix
         sell_item(game_state, item)
         options = locations[game_state.location]["options"]
@@ -144,7 +146,7 @@ def buy_item(state, item):
     logger.debug(f"Inventory after buying: {state.inventory}")
 
 def sell_item(state, item):
-    logger.debug(f"Selling item: {item}")
+    logger.debug(f"Attempting to sell item: {item}")
     logger.debug(f"Inventory before selling: {state.inventory}")
     if item in state.inventory and state.inventory[item] > 0:
         state.inventory[item] -= 1
@@ -152,10 +154,11 @@ def sell_item(state, item):
         if state.inventory[item] == 0:
             del state.inventory[item]
         state.message = f"You sold a {item} for {item_prices[item]['sell']} Gold."
+        logger.debug(f"Successfully sold {item}")
     else:
-        logger.debug(f"Inventory on fail selling: {state.inventory}")
         state.message = f"You don't have any {item} to sell."
-    logger.debug(f"Inventory after selling: {state.inventory}")
+        logger.debug(f"Failed to sell {item} - not in inventory or quantity is 0")
+    logger.debug(f"Inventory after selling attempt: {state.inventory}")
 
 if __name__ == '__main__':
     app.run(debug=True)
