@@ -46,9 +46,10 @@ class TestDragonRiderQuest(unittest.TestCase):
         self.assertEqual(self.game_state.message, "Select an item to sell:")
 
     def test_process_choice_sell_items_none_available(self):
-        options = process_choice(self.game_state, "Sell Items")
-        self.assertEqual(self.game_state.message, "You don't have any items to sell.")
-        self.assertEqual(options, locations["Marketplace"]["options"])
+    self.game_state.location = "Marketplace"  # Ensure we're in the Marketplace
+    options = process_choice(self.game_state, "Sell Items")
+    self.assertEqual(self.game_state.message, "You don't have any items to sell.")
+    self.assertEqual(options, locations["Marketplace"]["options"])
 
     def test_full_buy_sell_cycle(self):
         # Buy an item
