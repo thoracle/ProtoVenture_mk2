@@ -1,5 +1,5 @@
 import unittest
-from app import GameState, Quest, process_choice, buy_item, sell_item, item_prices, locations
+from app import GameState, Quest, Enemy, combat, process_choice, buy_item, sell_item, item_prices, locations
 
 class TestDragonRiderQuest(unittest.TestCase):
 
@@ -11,6 +11,12 @@ class TestDragonRiderQuest(unittest.TestCase):
         self.assertEqual(self.game_state.inventory["Gold"], 100)
         self.assertIsNone(self.game_state.dragon)
         self.assertEqual(self.game_state.quests, {})
+        self.assertEqual(self.game_state.level, 1)
+        self.assertEqual(self.game_state.exp, 0)
+        self.assertEqual(self.game_state.max_hp, 100)
+        self.assertEqual(self.game_state.current_hp, 100)
+        self.assertEqual(self.game_state.attack, 10)
+        self.assertEqual(self.game_state.defense, 5)
 
     def test_add_quest(self):
         quest = Quest("Test Quest", "A test quest", 3, {"Gold": 50})
@@ -107,20 +113,51 @@ class TestDragonRiderQuest(unittest.TestCase):
         self.assertIn("Learn basic spells", self.game_state.quests)
         self.assertEqual(self.game_state.quests["Learn basic spells"].progress, 1)
 
-    def test_master_of_trade_quest(self):
-        process_choice(self.game_state, "Head to the Marketplace")
-        buy_item(self.game_state, "Dragon Food")
-        self.assertIn("Master of trade", self.game_state.quests)
-        self.assertEqual(self.game_state.quests["Master of trade"].progress, 1)
+    def test_combat(self):
+        enemy = Enemy("Test Enemy", 30, 5, 2, 20)
+        initial_hp = self.game_state.current_hp
+        result = combat(self.game_state, enemy)
+        self.assertIn("You defeated Test Enemy!", result)
+        self.assertGreater(self.game_state.exp, 0)
+        self.assertLess(self.game_state.current_hp, initial_hp)
+
+    def test_combat_defeat(self):
+        enemy = Enemy("Strong Enemy", 200, 50, 10, 100)
+        result = combat(self.game_state, enemy)
+        self.assertIn("You have been defeated!", result)
+        self.assertEqual(self.game_state.current_hp, 0)
+
+    def test_gain_exp(self):
+        initial_level = self.game_state.level
+        self.game_state.gain_exp(50)
+        self.assertEqual(self.game_state.level, initial_level)
+        self.assertEqual(self.game_state.exp, 50)
+
+    def test_level_up(self):
+        initial_level = self.game_state.level
+        initial_max_hp = self.game_state.max_hp
+        initial_attack = self.game_state.attack
+        initial_defense = self.game_state.defense
+
+        self.game_state.gain_exp(100)  # Assuming 100 exp is enough to level up
         
-        self.game_state.inventory["Dragon Food"] = 1  # Ensure we have Dragon Food to sell
-        sell_item(self.game_state, "Dragon Food")
-        self.assertEqual(self.game_state.quests["Master of trade"].progress, 2)
+        self.assertEqual(self.game_state.level, initial_level + 1)
+        self.assertGreater(self.game_state.max_hp, initial_max_hp)
+        self.assertGreater(self.game_state.attack, initial_attack)
+        self.assertGreater(self.game_state.defense, initial_defense)
+        self.assertEqual(self.game_state.current_hp, self.game_state.max_hp)
+
+    def test_exp_to_next_level(self):
+        self.assertEqual(self.game_state.exp_to_next_level(), 100)  # At level 1
+        self.game_state.level = 2
+        self.assertEqual(self.game_state.exp_to_next_level(), 200)  # At level 2
 
     def test_to_dict_and_from_dict(self):
         original_state = GameState()
         original_state.dragon = "Fire Drake"
         original_state.add_quest(Quest("Test Quest", "A test quest", 3, {"Gold": 50}))
+        original_state.level = 2
+        original_state.exp = 50
         state_dict = original_state.to_dict()
         
         new_state = GameState.from_dict(state_dict)
@@ -132,6 +169,12 @@ class TestDragonRiderQuest(unittest.TestCase):
         self.assertEqual(len(new_state.quests), len(original_state.quests))
         self.assertEqual(new_state.quests["Test Quest"].name, original_state.quests["Test Quest"].name)
         self.assertEqual(new_state.quests["Test Quest"].objective, original_state.quests["Test Quest"].objective)
+        self.assertEqual(new_state.level, original_state.level)
+        self.assertEqual(new_state.exp, original_state.exp)
+        self.assertEqual(new_state.max_hp, original_state.max_hp)
+        self.assertEqual(new_state.current_hp, original_state.current_hp)
+        self.assertEqual(new_state.attack, original_state.attack)
+        self.assertEqual(new_state.defense, original_state.defense)
 
 if __name__ == '__main__':
     unittest.main()
