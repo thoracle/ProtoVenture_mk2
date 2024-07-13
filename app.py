@@ -72,7 +72,8 @@ def home():
     session['game_state'] = json.dumps(game_state.to_dict())
     logger.debug(f"Initial game state: {game_state.to_dict()}")
     return render_template('game.html', game_state=game_state, 
-                           options=locations[game_state.location]["options"])
+                           options=locations[game_state.location]["options"],
+                           current_tab='Inventory')
 
 @app.route('/game', methods=['POST'])
 def game():
@@ -81,6 +82,7 @@ def game():
     logger.debug(f"Game state loaded from session: {game_state.to_dict()}")
     
     choice = request.form['choice']
+    current_tab = request.form.get('current_tab', 'Inventory')  # Default to 'Inventory' if not provided
     logger.debug(f"User choice: {choice}")
     
     if choice == "Sell Items":
@@ -96,7 +98,7 @@ def game():
     session['game_state'] = json.dumps(game_state.to_dict())
     logger.debug(f"Session after processing: {session['game_state']}")
     
-    return render_template('game.html', game_state=game_state, options=options)
+    return render_template('game.html', game_state=game_state, options=options, current_tab=current_tab)
 
 def process_choice(state, choice):
     logger.debug(f"Processing choice: {choice}")
