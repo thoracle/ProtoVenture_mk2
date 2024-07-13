@@ -116,7 +116,7 @@ Implementing these improvements would make the codebase more structured, documen
 ---
 
 Summary as of 7/12/2024 at 6:15pm PST
-Here's a summary of our conversation from start to finish:
+- Here's a summary of our conversation from start to finish:
 
 1. Initial Game Development:
    - We started by creating a text-based adventure game called "Dragon Rider's Quest" using Python and Flask.
