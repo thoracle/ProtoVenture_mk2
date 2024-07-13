@@ -120,6 +120,7 @@ class TestDragonRiderQuest(unittest.TestCase):
         self.assertIn("You defeated Test Enemy!", result)
         self.assertGreater(self.game_state.exp, 0)
         self.assertLess(self.game_state.current_hp, initial_hp)
+        self.assertGreater(self.game_state.current_hp, 0)  # Ensure player survives
 
     def test_combat_defeat(self):
         enemy = Enemy("Strong Enemy", 200, 50, 10, 100)
