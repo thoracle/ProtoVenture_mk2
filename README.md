@@ -2,3 +2,33 @@
 
 > Please write me text adventure for a high fantasy rpg with dragon riding in an open world where the player’s choices matter and shape his reputation standing with rival factions.  This game should use python 3.12 with the flask framework.  It should have a basic web client that mimics the look of the telegram instant messenger.​​​​​​​​​​​​​​​​
 
+Core Class Diagram
+<src="https://www.plantuml.com/plantuml/svg/bP91ZzGm38Nl_HNMd6OM5ebhJtk2CuBxADjufc6JkCJE8eJuxoHnfochvR2NL7f-TZ-_v8759Cd13vCtpF3P1FmgHX1-3m3lF4r67CKHM9ABrwebNBAigdMJLCqcS_tNvU8pHg7qgvi2Cfihxbq_Ch9mjnXhpqqxjdE4B_LpggMyM2EerVEIw9gGMMtdQC8szZsOG3cMNXUrispcmjgOyAT9zfMsvXGwLvBZgHDT4WKLhH6ZUYblEGr_1erEKJMs_U0M3_AKtF8oINhyZfEuPsoiLRdjjGaJXSMZe1tXaSYZYLNLBJgaPjDJsIVmfhrqYRxJft8-wKw9ik0nPRzBEg3CP0kjT-ijfHoFfzhV7zBXum7kxk_XS7TOn-lK8dNJ29cHXo6I82HtdGNeqklZ-Ehr3m3VPiSh1nZF1DECqnE3ku3C2CqFnR85MNfCjD0U1JUFfbaxNBL-6B3KAyWB7ANVKFu3eLMTVBEqFp9AyNOG40996M-essi07RRZUC1eS_1_0G00">
+
+Use Case Diagram
+<src="https://www.plantuml.com/plantuml/svg/TP7BJiCm44Nt_efHDwnQaVIDggXGDknugEn7yTInSEnWEvI2-7UIDfRYLbr5TywnHxbUEu_MrwLYYdOUl04hHU61IqkvbqOppBsnyApmG9QnTefQA8B1eqLXDBnAJlR6mKjDpW_Wbm7KZd9qZVAafPUev0-1m986W0wscwIlR0hKWa2P7DjrdPB6YZ7D5u6t6uCoxYjl5U47xAKluDxcHOaYB9lqjOVw0AX1UYexF8rk8QNE-ApFtoNjGUelqjxOGsVCBumT7fi3vr5pgONhpCM5-Tbs5l2oZxSLHqyd0IfhX2KNnEGsQiUKbQBW1YNkMA4ikxiixT7oeANiZx7Jsy9mcBMZEAPn7CTn4iTf76TndCTn4SSbQyx3Q9GTVn3kOBMIEbSrfonhqEmw6bz7awke6GMM71bzUzByX9A0qhDZwqQfI_KF">
+
+Sequence Diagrams of use cases we have implemented:
+
+- Initialize game
+<src="https://www.plantuml.com/plantuml/svg/HOzH2i8m44J_SugvG2_G3wae-kE7L3p0aYuIJ3SbkqMylJ65z6k6sSSCEwXHjdMEZhobZ7kaBsUt2Re3Bf7qtUFeFQlYHJFZETvSZV_tQqaUHiOzJfcBGlYpfwuvT7lRoBPcGP1WWIAqagro6-zn3heKsx0wNbcGJ4YBXIJg1fQfFF03">
+
+- Change location
+<src="https://www.plantuml.com/plantuml/svg/TP31IiSm3CRlVOeSzV1_WHraekXL5CyZfXahTarjKiItjzjmSuAd5FBxll9BhuR5wXmTaac1fuXVNDmsu7833n7rlOExIKGP4dz2548BajowMfX7dFd5qBY3N8HOTQ190l5LuuSV_jhjt9_GQ_PjxiN_ShVUxz15CrCO0y57PJK88s3ECH2-HVxTS3WyizMIeAw_UT1rZyc3vALH3w5DluFxeBazJzgdHC_9j-Dz0m00">
+  
+- Choose a dragon
+- Speak with the Archmage
+- Buy an item
+<src="https://www.plantuml.com/plantuml/svg/TP7DJiCm48JlVefLJ-s15yW15O7WXCIFE5TBFKsZsjxWNIFozk0GKaMebyJoV9uTZxTgdAt4u7Xlakafy83iVdzqTKttWVNKqErHH44cz5u6wWpHZKf57ZZYrTZGL75NnNNzRDoiBB3gXls9kWCXIMcFr4hm5-6ttjVDBdqYcUJX8dZZFQqUMGsPv42MsMD57mLgTLOI8tnrQhfqUAv0GsKSi-kpj1cgwtzE6pUIvoFdQ-mbzW46_uSiWxt0IavJ4ZMsieWmjpo1KnG_efXxdjwceRjE-v_bZCtD42TF4QhSmcsHV8dX6m00">
+  
+- Sell an item
+- View inventory
+- View faction standings
+- View quests
+- Update quest progress
+<src="https://www.plantuml.com/plantuml/svg/VP6zJiD048JxUuef4mb2dm950a4RGDJHujk4K-x7xEs1ylROFlm31TNQsc-qCtExh2HQWZVKQ1BiFLrOJ1suliM3ftpUOizoJ1BGKIv5h7XpsbpXhLpWbCFQ35ZFFrBW5oNbBKfhktduA9prq4ew2UUygh-nmzPcWdlbKx-OL1E_DiDYGTozStE6Ew99eVMiR4Vaz_rdrY8Hmq5a9ItPa5TKU1O3c6L_CZIUNFY98Fn5OfS1_fM-3a7WuYT7JNAv4MwBKj-VuMYNuSUU9y-r13kuvhdS-YnRtBlSTfyJLYEEbO6YHJMRpOwZBS5_0m00">
+  
+- Complete quest
+- Claim quest reward
+
+
