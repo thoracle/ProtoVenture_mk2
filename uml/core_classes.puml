@@ -6,9 +6,18 @@ class GameState {
   +inventory: dict
   +message: string
   +quests: dict
+  +level: int
+  +exp: int
+  +max_hp: int
+  +current_hp: int
+  +attack: int
+  +defense: int
   +add_quest(quest: Quest)
   +update_quest_progress(quest_name: string, amount: int)
   +claim_quest_reward(quest_name: string)
+  +gain_exp(amount: int)
+  +exp_to_next_level(): int
+  +level_up()
   +to_dict(): dict
   +from_dict(data: dict): GameState
 }
@@ -25,12 +34,21 @@ class Quest {
   +from_dict(data: dict): Quest
 }
 
+class Enemy {
+  +name: string
+  +hp: int
+  +attack: int
+  +defense: int
+  +exp_reward: int
+}
+
 class Flask {
   +route(rule: string, methods: list)
   +run()
 }
 
 GameState "1" *-- "*" Quest
+GameState -- Enemy : fights
 Flask -- GameState : uses
 
 note right of GameState::update_quest_progress
@@ -41,5 +59,10 @@ end note
 note right of Quest::update_progress
   This method updates the progress and sets
   completed to true if the objective is met.
+end note
+
+note right of GameState::gain_exp
+  This method adds experience and calls
+  level_up() if necessary.
 end note
 @enduml
