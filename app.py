@@ -206,6 +206,8 @@ def buy_item(state, item):
         state.inventory["Gold"] -= item_prices[item]["buy"]
         state.inventory[item] = state.inventory.get(item, 0) + 1
         state.message = f"You bought a {item} for {item_prices[item]['buy']} Gold."
+        if "Master of trade" not in state.quests:
+            state.add_quest(Quest("Master of trade", "Complete 5 trades in the marketplace", 5, {"Merchants": 10, "Gold": 50}))
         state.update_quest_progress("Master of trade")
     else:
         state.message = f"You don't have enough Gold to buy a {item}."
@@ -220,6 +222,8 @@ def sell_item(state, item):
         if state.inventory[item] == 0:
             del state.inventory[item]
         state.message = f"You sold a {item} for {item_prices[item]['sell']} Gold."
+        if "Master of trade" not in state.quests:
+            state.add_quest(Quest("Master of trade", "Complete 5 trades in the marketplace", 5, {"Merchants": 10, "Gold": 50}))
         state.update_quest_progress("Master of trade")
         logger.debug(f"Successfully sold {item}")
     else:
