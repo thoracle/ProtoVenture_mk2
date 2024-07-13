@@ -165,9 +165,9 @@ def combat(game_state, enemy):
     combat_log = []
     while game_state.current_hp > 0 and enemy.hp > 0:
         # Player's turn
-        damage = max(0, game_state.attack - enemy.defense)
-        enemy.hp -= damage
-        combat_log.append(f"You deal {damage} damage to {enemy.name}.")
+        player_damage = max(0, game_state.attack - enemy.defense)
+        enemy.hp -= player_damage
+        combat_log.append(f"You deal {player_damage} damage to {enemy.name}.")
 
         if enemy.hp <= 0:
             combat_log.append(f"You defeated {enemy.name}!")
@@ -176,9 +176,9 @@ def combat(game_state, enemy):
             break
 
         # Enemy's turn
-        damage = max(0, enemy.attack - game_state.defense)
-        game_state.current_hp -= damage
-        combat_log.append(f"{enemy.name} deals {damage} damage to you.")
+        enemy_damage = max(0, enemy.attack - game_state.defense)
+        game_state.current_hp = max(0, game_state.current_hp - enemy_damage)  # Ensure HP doesn't go below 0
+        combat_log.append(f"{enemy.name} deals {enemy_damage} damage to you.")
 
         if game_state.current_hp <= 0:
             combat_log.append("You have been defeated!")
