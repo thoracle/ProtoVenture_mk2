@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dragon Rider's Quest</title>
+    <style>
+        /* CSS styles for the game interface */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e6ebee;
+            margin: 0;
+            padding: 0;
+        }
+        .game-container {
+            display: flex;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .chat-container {
+            flex: 2;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            margin-right: 20px;
+        }
+        .info-container {
+            flex: 1;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .chat-header, .info-header {
+            background-color: #5682a3;
+            color: white;
+            padding: 10px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .chat-messages {
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .message {
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .options {
+            padding: 20px;
+        }
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #5682a3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        .tab button.active {
+            background-color: #ccc;
+        }
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Chat container for game messages and options -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2>Dragon Rider's Quest</h2>
+            </div>
+            <div class="chat-messages">
+                <!-- Display game messages -->
+                <div class="message">{{ game_state.message }}</div>
+            </div>
+            <div class="options">
+                <!-- Form for submitting player choices -->
+                <form method="POST" action="{{ url_for('game') }}">
+                    <!-- Hidden input to maintain the current tab across requests -->
+                    <input type="hidden" name="current_tab" id="current_tab" value="{{ current_tab }}">
+                    <!-- Generate buttons for each available option -->
+                    {% for option in options %}
+                        <button type="submit" name="choice" value="{{ option }}" class="option-btn">{{ option }}</button>
+                    {% endfor %}
+                </form>
+            </div>
+        </div>
+        <!-- Info container for player status (inventory, faction, quests) -->
+        <div class="info-container">
+            <div class="info-header">
+                <h2>Player Info</h2>
+            </div>
+            <!-- Tabs for different types of player information -->
+            <div class="tab">
+                <button class="tablinks" onclick="openTab(event, 'Inventory')">Inventory</button>
+                <button class="tablinks" onclick="openTab(event, 'Faction')">Faction</button>
+                <button class="tablinks" onclick="openTab(event, 'Quests')">Quests</button>
+            </div>
+
+            <!-- Inventory tab content -->
+            <div id="Inventory" class="tabcontent">
+                <h3>Inventory</h3>
+                <ul>
+                    {% for item, quantity in game_state.inventory.items() %}
+                        <li>{{ item }}: {{ quantity }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Faction tab content -->
+            <div id="Faction" class="tabcontent">
+                <h3>Faction Standings</h3>
+                <ul>
+                    {% for faction, standing in game_state.reputation.items() %}
+                        <li>{{ faction }}: {{ standing }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Quests tab content -->
+            <div id="Quests" class="tabcontent">
+                <h3>Active Quests</h3>
+                <ul>
+                    {% if game_state.quests %}
+                        {% for quest in game_state.quests.values() %}
+                            <li>
+                                {{ quest.name }}: {{ quest.description }}
+                                <br>Progress: {{ quest.progress }}/{{ quest.objective }}
+                                {% if quest.completed %}
+                                    <br><strong>Completed!</strong>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No active quests</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // JavaScript for handling tab switching
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+        document.getElementById("current_tab").value = tabName;
+    }
+
+    // Set the initial tab based on the value from the server
+    document.addEventListener('DOMContentLoaded', (event) => {
+        openTab({currentTarget: document.querySelector(`button[onclick="openTab(event, '{{ current_tab }}')"]`)}, '{{ current_tab }}');
+    });
+    </script>
+</body>
+</html>
