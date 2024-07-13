@@ -50,6 +50,58 @@ These sequence diagrams cover all the use cases we've implemented in the Dragon 
 
 These diagrams, along with the class diagram and use case diagram provided earlier, offer a comprehensive technical documentation of the game's structure and functionality. They can be very useful for understanding the system, onboarding new developers, or planning future expansions to the game.​​​​​​​​​​​​​​​​
 
+Future Work:
+Based on our current implementation and common features in RPG-style games, here are the top 10 remaining use cases we could add to enhance "Dragon Rider's Quest":
+
+1. Combat System: Implement battles with enemies, including combat mechanics and rewards.
+
+2. Character Leveling: Add an experience point system and character levels, with stat improvements upon leveling up.
+
+3. Skill Tree: Implement a skill or ability system where players can unlock and upgrade various powers or talents.
+
+4. Crafting System: Allow players to craft items using resources gathered during their adventures.
+
+5. NPC Dialogue System: Expand NPC interactions with branching dialogues and choices that affect the game world.
+
+6. Multi-part Quests: Implement more complex quests with multiple stages and branching outcomes.
+
+7. Inventory Management: Add inventory limits, item categories, and equipment slots.
+
+8. World Map: Create a broader world map with multiple locations to explore.
+
+9. Time System: Implement a day/night cycle or calendar system that affects game events and NPC schedules.
+
+10. Companion System: Allow players to recruit and manage a party of companions, each with their own skills and quests.
+
+These use cases would significantly expand the game's depth and complexity, providing more engaging gameplay and replayability. Implementing these would require substantial additions to our current codebase and game logic.​​​​​​​​​​​​​​​​
+
+Future Software Engineering:
+Here are the top ten things we could improve to make our codebase better suited for AI generation with Claude:
+
+1. Modularization: Break down the code into smaller, more focused modules. This would make it easier for Claude to understand and generate specific parts of the code.
+
+2. Consistent Naming Conventions: Ensure all variables, functions, and classes follow a consistent naming convention. This helps Claude understand the purpose and relationships between different code elements.
+
+3. Type Hinting: Add type hints to function parameters and return values. This provides clearer information about data types, making it easier for Claude to generate appropriate code.
+
+4. Docstrings and Comments: Add more comprehensive docstrings and comments, especially for complex logic. This helps Claude understand the intent behind the code.
+
+5. Configuration File: Move game constants and configuration into a separate file. This makes it easier to adjust game parameters without changing core logic.
+
+6. Design Patterns: Implement and clearly label common design patterns. This allows Claude to recognize and suggest appropriate patterns in new code.
+
+7. Error Handling: Implement more robust error handling and logging. This helps in debugging and makes it clearer how the system should behave in edge cases.
+
+8. Test-Driven Development: Write tests before implementing features. This gives Claude a clear specification of what each piece of code should do.
+
+9. Separation of Concerns: Ensure each class or function has a single, well-defined responsibility. This makes the code more modular and easier to understand and generate.
+
+10. API Documentation: Create clear API documentation for key classes and functions. This helps Claude understand how different parts of the system should interact.
+
+Implementing these improvements would make the codebase more structured, documented, and modular. This, in turn, would make it easier for Claude to understand the existing code, generate new code that fits well with the existing structure, and provide more accurate and helpful suggestions for further development.​​​​​​​​​​​​​​​​
+
+---
+
 Summary as of 7/12/2024 at 6:15pm PST
 Here's a summary of our conversation from start to finish:
 
