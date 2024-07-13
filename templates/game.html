@@ -101,7 +101,7 @@
             </div>
             <div class="options">
                 <form method="POST" action="{{ url_for('game') }}">
-                    <input type="hidden" name="current_tab" id="current_tab" value="Inventory">
+                    <input type="hidden" name="current_tab" id="current_tab" value="{{ current_tab }}">
                     {% for option in options %}
                         <button type="submit" name="choice" value="{{ option }}" class="option-btn">{{ option }}</button>
                     {% endfor %}
@@ -140,8 +140,14 @@
                 <h3>Active Quests</h3>
                 <ul>
                     {% if game_state.quests %}
-                        {% for quest in game_state.quests %}
-                            <li>{{ quest }}</li>
+                        {% for quest in game_state.quests.values() %}
+                            <li>
+                                {{ quest.name }}: {{ quest.description }}
+                                <br>Progress: {{ quest.progress }}/{{ quest.objective }}
+                                {% if quest.completed %}
+                                    <br><strong>Completed!</strong>
+                                {% endif %}
+                            </li>
                         {% endfor %}
                     {% else %}
                         <li>No active quests</li>
