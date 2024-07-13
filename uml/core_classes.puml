@@ -1,0 +1,45 @@
+@startuml
+class GameState {
+  +location: string
+  +reputation: dict
+  +dragon: string
+  +inventory: dict
+  +message: string
+  +quests: dict
+  +add_quest(quest: Quest)
+  +update_quest_progress(quest_name: string, amount: int)
+  +claim_quest_reward(quest_name: string)
+  +to_dict(): dict
+  +from_dict(data: dict): GameState
+}
+
+class Quest {
+  +name: string
+  +description: string
+  +objective: int
+  +progress: int
+  +completed: boolean
+  +reward: dict
+  +update_progress(amount: int)
+  +to_dict(): dict
+  +from_dict(data: dict): Quest
+}
+
+class Flask {
+  +route(rule: string, methods: list)
+  +run()
+}
+
+GameState "1" *-- "*" Quest
+Flask -- GameState : uses
+
+note right of GameState::update_quest_progress
+  This method also checks if the quest is completed
+  and claims the reward if it is.
+end note
+
+note right of Quest::update_progress
+  This method updates the progress and sets
+  completed to true if the objective is met.
+end note
+@enduml
