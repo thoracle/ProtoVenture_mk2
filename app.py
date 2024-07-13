@@ -41,7 +41,6 @@ class Quest:
         quest.completed = data['completed']
         return quest
 
-# Game state
 class GameState:
     def __init__(self):
         self.location = "Dragonhome"
@@ -49,7 +48,13 @@ class GameState:
         self.dragon = None
         self.inventory = {"Gold": 100}
         self.message = "Welcome to Dragon Rider's Quest!"
-        self.quests = {}  # Changed to a dictionary for easier access
+        self.quests = {}
+        self.level = 1
+        self.exp = 0
+        self.max_hp = 100
+        self.current_hp = 100
+        self.attack = 10
+        self.defense = 5
 
     def add_quest(self, quest):
         self.quests[quest.name] = quest
@@ -73,6 +78,23 @@ class GameState:
                         self.inventory[item] = self.inventory.get(item, 0) + amount
             self.message += f" You completed the quest '{quest_name}' and received your reward!"
 
+    def gain_exp(self, amount):
+        self.exp += amount
+        while self.exp >= self.exp_to_next_level():
+            self.level_up()
+
+    def exp_to_next_level(self):
+        return self.level * 100
+
+    def level_up(self):
+        self.level += 1
+        self.max_hp += 20
+        self.current_hp = self.max_hp
+        self.attack += 2
+        self.defense += 1
+        self.exp -= self.exp_to_next_level()
+        self.message += f" You leveled up to level {self.level}!"
+
     def to_dict(self):
         return {
             'location': self.location,
@@ -80,7 +102,13 @@ class GameState:
             'dragon': self.dragon,
             'inventory': self.inventory,
             'message': self.message,
-            'quests': {name: quest.to_dict() for name, quest in self.quests.items()}
+            'quests': {name: quest.to_dict() for name, quest in self.quests.items()},
+            'level': self.level,
+            'exp': self.exp,
+            'max_hp': self.max_hp,
+            'current_hp': self.current_hp,
+            'attack': self.attack,
+            'defense': self.defense
         }
 
     @classmethod
@@ -92,7 +120,21 @@ class GameState:
         state.inventory = data['inventory']
         state.message = data['message']
         state.quests = {name: Quest.from_dict(quest_data) for name, quest_data in data['quests'].items()}
+        state.level = data['level']
+        state.exp = data['exp']
+        state.max_hp = data['max_hp']
+        state.current_hp = data['current_hp']
+        state.attack = data['attack']
+        state.defense = data['defense']
         return state
+
+class Enemy:
+    def __init__(self, name, hp, attack, defense, exp_reward):
+        self.name = name
+        self.hp = hp
+        self.attack = attack
+        self.defense = defense
+        self.exp_reward = exp_reward
 
 # Game content
 locations = {
@@ -118,6 +160,31 @@ item_prices = {
     "Spell Book": {"buy": 50, "sell": 30},
     "Dragon Food": {"buy": 20, "sell": 15}
 }
+
+def combat(game_state, enemy):
+    combat_log = []
+    while game_state.current_hp > 0 and enemy.hp > 0:
+        # Player's turn
+        damage = max(0, game_state.attack - enemy.defense)
+        enemy.hp -= damage
+        combat_log.append(f"You deal {damage} damage to {enemy.name}.")
+
+        if enemy.hp <= 0:
+            combat_log.append(f"You defeated {enemy.name}!")
+            game_state.gain_exp(enemy.exp_reward)
+            combat_log.append(f"You gained {enemy.exp_reward} experience points.")
+            break
+
+        # Enemy's turn
+        damage = max(0, enemy.attack - game_state.defense)
+        game_state.current_hp -= damage
+        combat_log.append(f"{enemy.name} deals {damage} damage to you.")
+
+        if game_state.current_hp <= 0:
+            combat_log.append("You have been defeated!")
+            break
+
+    return "\n".join(combat_log)
 
 @app.route('/')
 def home():
@@ -195,6 +262,10 @@ def process_choice(state, choice):
     elif choice == "Return to Dragonhome":
         state.location = "Dragonhome"
         state.message = "You return to Dragonhome. " + locations["Dragonhome"]["description"]
+    elif choice == "Fight Enemy":
+        enemy = Enemy("Goblin", 50, 8, 3, 50)  # Example enemy
+        combat_result = combat(state, enemy)
+        state.message = combat_result
     else:
         state.message = "Invalid choice. Please try again."
     return locations[state.location]["options"]
