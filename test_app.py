@@ -121,8 +121,9 @@ class TestDragonRiderQuest(unittest.TestCase):
         self.assertGreater(self.game_state.exp, 0)
         self.assertLess(self.game_state.current_hp, initial_hp)
         self.assertGreater(self.game_state.current_hp, 0)  # Ensure player survives
-        self.assertIn("deals 3 damage to you", result)  # Check that enemy deals expected damage
-
+        self.assertIn("deals 1 damage to you", result)  # Check that enemy deals minimum damage
+        self.assertIn("You deal 8 damage to Test Enemy", result)  # Check player damage
+    
     def test_combat_defeat(self):
         enemy = Enemy("Strong Enemy", 200, 50, 10, 100)
         result = combat(self.game_state, enemy)
