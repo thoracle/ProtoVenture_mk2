@@ -10,6 +10,37 @@ app.secret_key = 'your_secret_key_here'  # Replace with a real secret key
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+class Quest:
+    def __init__(self, name, description, objective, reward):
+        self.name = name
+        self.description = description
+        self.objective = objective
+        self.progress = 0
+        self.completed = False
+        self.reward = reward
+
+    def update_progress(self, amount=1):
+        self.progress += amount
+        if self.progress >= self.objective:
+            self.completed = True
+
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'description': self.description,
+            'objective': self.objective,
+            'progress': self.progress,
+            'completed': self.completed,
+            'reward': self.reward
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        quest = cls(data['name'], data['description'], data['objective'], data['reward'])
+        quest.progress = data['progress']
+        quest.completed = data['completed']
+        return quest
+
 # Game state
 class GameState:
     def __init__(self):
@@ -18,7 +49,29 @@ class GameState:
         self.dragon = None
         self.inventory = {"Gold": 100}
         self.message = "Welcome to Dragon Rider's Quest!"
-        self.quests = []  # Initialize with an empty list of quests
+        self.quests = {}  # Changed to a dictionary for easier access
+
+    def add_quest(self, quest):
+        self.quests[quest.name] = quest
+
+    def update_quest_progress(self, quest_name, amount=1):
+        if quest_name in self.quests:
+            self.quests[quest_name].update_progress(amount)
+            if self.quests[quest_name].completed:
+                self.claim_quest_reward(quest_name)
+
+    def claim_quest_reward(self, quest_name):
+        if quest_name in self.quests and self.quests[quest_name].completed:
+            reward = self.quests[quest_name].reward
+            if isinstance(reward, dict):
+                for item, amount in reward.items():
+                    if item == "Gold":
+                        self.inventory["Gold"] += amount
+                    elif item in self.reputation:
+                        self.reputation[item] += amount
+                    else:
+                        self.inventory[item] = self.inventory.get(item, 0) + amount
+            self.message += f" You completed the quest '{quest_name}' and received your reward!"
 
     def to_dict(self):
         return {
@@ -27,7 +80,7 @@ class GameState:
             'dragon': self.dragon,
             'inventory': self.inventory,
             'message': self.message,
-            'quests': self.quests
+            'quests': {name: quest.to_dict() for name, quest in self.quests.items()}
         }
 
     @classmethod
@@ -38,7 +91,7 @@ class GameState:
         state.dragon = data['dragon']
         state.inventory = data['inventory']
         state.message = data['message']
-        state.quests = data['quests']
+        state.quests = {name: Quest.from_dict(quest_data) for name, quest_data in data['quests'].items()}
         return state
 
 # Game content
@@ -105,26 +158,29 @@ def process_choice(state, choice):
     if choice == "Visit the Dragon Roost":
         state.location = "Dragon Roost"
         state.message = "You head to the Dragon Roost. " + locations["Dragon Roost"]["description"]
+        if "Bond with a dragon" not in state.quests:
+            state.add_quest(Quest("Bond with a dragon", "Choose your dragon companion", 1, {"Dragon Riders": 10}))
     elif choice == "Go to the Mage Quarter":
         state.location = "Mage Quarter"
         state.message = "You enter the Mage Quarter. " + locations["Mage Quarter"]["description"]
+        if "Learn basic spells" not in state.quests:
+            state.add_quest(Quest("Learn basic spells", "Study and master 3 basic spells", 3, {"Mage Guild": 10, "Spell Book": 1}))
     elif choice == "Head to the Marketplace":
         state.location = "Marketplace"
         state.message = "You arrive at the Marketplace. " + locations["Marketplace"]["description"]
+        if "Master of trade" not in state.quests:
+            state.add_quest(Quest("Master of trade", "Complete 5 trades in the marketplace", 5, {"Merchants": 10, "Gold": 50}))
     elif choice == "Choose a dragon":
         if state.dragon is None:
             state.dragon = random.choice(["Fire Drake", "Storm Wyrm", "Frost Serpent"])
-            state.reputation["Dragon Riders"] += 10
             state.message = f"You have bonded with a {state.dragon}! Your reputation with the Dragon Riders has increased."
-            if "Bond with a dragon" not in state.quests:
-                state.quests.append("Bond with a dragon")
+            state.update_quest_progress("Bond with a dragon")
         else:
             state.message = "You already have a dragon companion."
     elif choice == "Speak with the Archmage":
         state.reputation["Mage Guild"] += 5
         state.message = "The Archmage shares some magical wisdom. Your reputation with the Mage Guild has slightly increased."
-        if "Learn basic spells" not in state.quests:
-            state.quests.append("Learn basic spells")
+        state.update_quest_progress("Learn basic spells")
     elif choice == "Buy a Spell Book":
         buy_item(state, "Spell Book")
     elif choice == "Buy Dragon Food":
@@ -150,10 +206,7 @@ def buy_item(state, item):
         state.inventory["Gold"] -= item_prices[item]["buy"]
         state.inventory[item] = state.inventory.get(item, 0) + 1
         state.message = f"You bought a {item} for {item_prices[item]['buy']} Gold."
-        if item == "Spell Book" and "Study your Spell Book" not in state.quests:
-            state.quests.append("Study your Spell Book")
-        elif item == "Dragon Food" and "Feed your dragon" not in state.quests:
-            state.quests.append("Feed your dragon")
+        state.update_quest_progress("Master of trade")
     else:
         state.message = f"You don't have enough Gold to buy a {item}."
     logger.debug(f"Inventory after buying: {state.inventory}")
@@ -167,6 +220,7 @@ def sell_item(state, item):
         if state.inventory[item] == 0:
             del state.inventory[item]
         state.message = f"You sold a {item} for {item_prices[item]['sell']} Gold."
+        state.update_quest_progress("Master of trade")
         logger.debug(f"Successfully sold {item}")
     else:
         state.message = f"You don't have any {item} to sell."
