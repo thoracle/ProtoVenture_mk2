@@ -42,6 +42,7 @@ Sequence Diagrams of use cases we have implemented:
   <img src="https://www.plantuml.com/plantuml/svg/ZLBBJkim4DtxAqPTzIxk3sI1Ya0W5aX0nReQwjCIrOw3PrBHlyTsghXLnIEAuiXp7iVZMOXorC4xmsiDaPuS7n3DkD3_AxfpBBk6Rjv349064ZX7hSARKigOU_POAYkQKbtbwZn__fcfT8vBUbZlgDqK9MgxzExHfGG7mqxf8U_odbl7Rmw6qlETqcjlqrhvD8_mOGyg0NwaNbjBs-0iQQZyNncpHnP5fB0XZMmneuy1elamNL32PoigbohF6TJGKEAk-XYs4IBp2xKIUKHNMktNElZUGM5FOUSXNw13x8wf9EqDOk04fQivunyxkuGIOWoHF4Hu2uFEdjve7O_HydWuMqnHvsESfePkM-dJxmIhTyQTdKmMoMNmxWi0">
   
 - View inventory
+  
   <img src="https://www.plantuml.com/plantuml/svg/NSv12i8m50JGVKun5-W5if0knE9Ex0c-xIoAQPHaAlJsHWifTFK_p6EODikIbZau6_HAk0LRcTnsq9nm2PQV7Zq31-4QFup5hP0zt3_xeSvczZBHewCmLJMQpDKKpLvufvOKZxGsRWCypbD-btTthcKSozul">
   
 - View faction standings
