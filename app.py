@@ -165,7 +165,7 @@ def combat(game_state, enemy):
     combat_log = []
     while game_state.current_hp > 0 and enemy.hp > 0:
         # Player's turn
-        player_damage = max(1, game_state.attack - enemy.defense)  # Ensure minimum 1 damage
+        player_damage = max(1, game_state.attack - enemy.defense)
         enemy.hp -= player_damage
         combat_log.append(f"You deal {player_damage} damage to {enemy.name}.")
 
@@ -176,7 +176,7 @@ def combat(game_state, enemy):
             break
 
         # Enemy's turn
-        enemy_damage = max(1, enemy.attack - game_state.defense)  # Ensure minimum 1 damage
+        enemy_damage = max(1, enemy.attack - game_state.defense)
         game_state.current_hp = max(0, game_state.current_hp - enemy_damage)
         combat_log.append(f"{enemy.name} deals {enemy_damage} damage to you.")
 
