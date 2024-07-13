@@ -1,0 +1,56 @@
+@startuml
+actor Player
+participant "Flask Route" as Flask
+participant GameState
+participant Enemy
+participant "combat()" as Combat
+
+Player -> Flask: Choose "Fight Enemy"
+activate Flask
+
+Flask -> GameState: process_choice("Fight Enemy")
+activate GameState
+
+GameState -> Enemy: Create Enemy instance
+activate Enemy
+Enemy --> GameState: Return Enemy object
+deactivate Enemy
+
+GameState -> Combat: combat(game_state, enemy)
+activate Combat
+
+loop while player and enemy are alive
+    Combat -> GameState: Calculate player damage
+    GameState --> Combat: Return damage
+    Combat -> Enemy: Apply damage to enemy
+    
+    alt enemy defeated
+        Combat -> GameState: Update experience
+        Combat -> GameState: Check for level up
+        alt level up
+            GameState -> GameState: Increase stats
+        end
+        Combat --> GameState: Return combat log
+    else enemy still alive
+        Enemy --> Combat: Return enemy status
+        Combat -> Enemy: Calculate enemy damage
+        Enemy --> Combat: Return damage
+        Combat -> GameState: Apply damage to player
+        
+        alt player defeated
+            Combat --> GameState: Return combat log
+        end
+    end
+end
+
+Combat --> GameState: Return final combat log
+deactivate Combat
+
+GameState -> GameState: Update message with combat log
+GameState --> Flask: Return updated game state
+deactivate GameState
+
+Flask -> Player: Display combat results and updated game state
+deactivate Flask
+
+@enduml
