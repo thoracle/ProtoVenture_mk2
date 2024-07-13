@@ -105,6 +105,7 @@
                     {% for option in options %}
                         <button type="submit" name="choice" value="{{ option }}" class="option-btn">{{ option }}</button>
                     {% endfor %}
+                    <button type="submit" name="choice" value="Fight Enemy" class="option-btn">Fight Enemy</button>
                 </form>
             </div>
         </div>
@@ -113,9 +114,21 @@
                 <h2>Player Info</h2>
             </div>
             <div class="tab">
+                <button class="tablinks" onclick="openTab(event, 'Character')">Character</button>
                 <button class="tablinks" onclick="openTab(event, 'Inventory')">Inventory</button>
                 <button class="tablinks" onclick="openTab(event, 'Faction')">Faction</button>
                 <button class="tablinks" onclick="openTab(event, 'Quests')">Quests</button>
+            </div>
+
+            <div id="Character" class="tabcontent">
+                <h3>Character Stats</h3>
+                <ul>
+                    <li>Level: {{ game_state.level }}</li>
+                    <li>EXP: {{ game_state.exp }}/{{ game_state.exp_to_next_level() }}</li>
+                    <li>HP: {{ game_state.current_hp }}/{{ game_state.max_hp }}</li>
+                    <li>Attack: {{ game_state.attack }}</li>
+                    <li>Defense: {{ game_state.defense }}</li>
+                </ul>
             </div>
 
             <div id="Inventory" class="tabcontent">
