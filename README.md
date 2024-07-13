@@ -59,6 +59,10 @@ Sequence Diagrams of use cases we have implemented:
 - Claim quest reward
   <img src="https://www.plantuml.com/plantuml/svg/ZL4xJmCn3DxpAppU3OYz0oegWfM7c2kJk3shUOJ4eRf_JwuvUWW4QfOy_3tiB-iicAGugr1BIF1eSQIasWPNDt1lCHzMi0akMX82XFT2MQ338i6Xi0PjaLslJiY9ye2ENWI5LgsqFJ6sYOwOJDSklc9wTKR-e6q6qWVWtUp56VJiRnHQWQVVpr3NNtAtCTeHcZzq9Pe9mlw3V1rvl4uKImLoyFs_Cg-Dw2Xdt1CSMOOlKVQxeCXccblpGIxixIvCu87zNf4ttnDPmdycASb3Qzn0dkfBtEslgXBdM8yjSpBdUMkCM0DWZM-sPhwkDiNPJm00">
 
+- Combat System: Implement battles with enemies, including combat mechanics and rewards.
+
+<img src="https://www.plantuml.com/plantuml/svg/dLJDRjiy4BphAHO-9S2N5_3XGmht1xqLANeEDjJQOhCY2NBbr6_Va5pGOktwq8CjaPoP7SwAV4o2KPQP1pJY8tnZF54S0aQnnWPq0flFZEaLdlmYj05CKCOTv0lEz5rGg9lzv6W-zLB6poyeT_T5PrS6mr1hmiF_LNaBkydxHE-5xM5IcKtsPuyefEM7yiYaLdmB8Nf3AJsRoLj3Tvt0VLDOsHtQQrOgmFVoaL2eZi2w9EWCDRPkgwu-zFMVI9RebEbVVfAHOQIUsTVK4BQWoHnmfkUK5_y3ol2pxPONUn_WRR9C46fqwCQA1em4oFP80m0euu-GTiXcOPJ67d76GoMih3LlRLkAwuKrimyXy4aH8BwwAT3oXongSAHzJdSiqt_r-2ECsGJz2XGjEKEtuRk9p2liVGIc8p4iGV6bykLalzLUwwipaJ0Hv2waHY5tQVbgyqrTP7yeUE94klKabbcxeqerlYjXDmhAqanSnjvwgVZMejlgYhiLwaLBzMjfd7N2kjOtzr_IQadhC_-6cm9xwv3NCYDT79Z6klwLpPHItkERbMcjjAATxoOjknJg2FcybYxHkd1ZdgyflLctyD6cd9OMWaXfOKdb2DyMrNllaToupFmR">
+
 These sequence diagrams cover all the use cases we've implemented in the Dragon Rider's Quest game. They provide a clear visualization of the interactions between the Player, Flask (our web framework), GameState, and Quest objects for each major action in the game.
 
 These diagrams, along with the class diagram and use case diagram provided earlier, offer a comprehensive technical documentation of the game's structure and functionality. They can be very useful for understanding the system, onboarding new developers, or planning future expansions to the game.​​​​​​​​​​​​​​​​
@@ -66,25 +70,23 @@ These diagrams, along with the class diagram and use case diagram provided earli
 Future Work:
 Based on our current implementation and common features in RPG-style games, here are the top 10 remaining use cases we could add to enhance "Dragon Rider's Quest":
 
-1. Combat System: Implement battles with enemies, including combat mechanics and rewards.
+3. Character Leveling: Add an experience point system and character levels, with stat improvements upon leveling up.
 
-2. Character Leveling: Add an experience point system and character levels, with stat improvements upon leveling up.
+4. Skill Tree: Implement a skill or ability system where players can unlock and upgrade various powers or talents.
 
-3. Skill Tree: Implement a skill or ability system where players can unlock and upgrade various powers or talents.
+5. Crafting System: Allow players to craft items using resources gathered during their adventures.
 
-4. Crafting System: Allow players to craft items using resources gathered during their adventures.
+6. NPC Dialogue System: Expand NPC interactions with branching dialogues and choices that affect the game world.
 
-5. NPC Dialogue System: Expand NPC interactions with branching dialogues and choices that affect the game world.
+7. Multi-part Quests: Implement more complex quests with multiple stages and branching outcomes.
 
-6. Multi-part Quests: Implement more complex quests with multiple stages and branching outcomes.
+8. Inventory Management: Add inventory limits, item categories, and equipment slots.
 
-7. Inventory Management: Add inventory limits, item categories, and equipment slots.
+9. World Map: Create a broader world map with multiple locations to explore.
 
-8. World Map: Create a broader world map with multiple locations to explore.
+10. Time System: Implement a day/night cycle or calendar system that affects game events and NPC schedules.
 
-9. Time System: Implement a day/night cycle or calendar system that affects game events and NPC schedules.
-
-10. Companion System: Allow players to recruit and manage a party of companions, each with their own skills and quests.
+11. Companion System: Allow players to recruit and manage a party of companions, each with their own skills and quests.
 
 These use cases would significantly expand the game's depth and complexity, providing more engaging gameplay and replayability. Implementing these would require substantial additions to our current codebase and game logic.​​​​​​​​​​​​​​​​
 
