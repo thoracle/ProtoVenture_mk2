@@ -1,12 +1,24 @@
 # ProtoVenture_mk2
 
+About:
+second experiment using UML to keep LLM on the rails while it generates a text based rpg of progressevly increasing complexity.
+
+to run app:
+
+python3 app.py
+launch web browswer with url: 127.0.0.1:5000
+get your dragon on!
+
 > Please write me text adventure for a high fantasy rpg with dragon riding in an open world where the player’s choices matter and shape his reputation standing with rival factions.  This game should use python 3.12 with the flask framework.  It should have a basic web client that mimics the look of the telegram instant messenger.​​​​​​​​​​​​​​​​
+
 
 Core Class Diagram
 <img src="https://www.plantuml.com/plantuml/svg/bP91ZzGm38Nl_HNMd6OM5ebhJtk2CuBxADjufc6JkCJE8eJuxoHnfochvR2NL7f-TZ-_v8759Cd13vCtpF3P1FmgHX1-3m3lF4r67CKHM9ABrwebNBAigdMJLCqcS_tNvU8pHg7qgvi2Cfihxbq_Ch9mjnXhpqqxjdE4B_LpggMyM2EerVEIw9gGMMtdQC8szZsOG3cMNXUrispcmjgOyAT9zfMsvXGwLvBZgHDT4WKLhH6ZUYblEGr_1erEKJMs_U0M3_AKtF8oINhyZfEuPsoiLRdjjGaJXSMZe1tXaSYZYLNLBJgaPjDJsIVmfhrqYRxJft8-wKw9ik0nPRzBEg3CP0kjT-ijfHoFfzhV7zBXum7kxk_XS7TOn-lK8dNJ29cHXo6I82HtdGNeqklZ-Ehr3m3VPiSh1nZF1DECqnE3ku3C2CqFnR85MNfCjD0U1JUFfbaxNBL-6B3KAyWB7ANVKFu3eLMTVBEqFp9AyNOG40996M-essi07RRZUC1eS_1_0G00">
 
+
 Use Case Diagram
 <img src="https://www.plantuml.com/plantuml/svg/TP7BJiCm44Nt_efHDwnQaVIDggXGDknugEn7yTInSEnWEvI2-7UIDfRYLbr5TywnHxbUEu_MrwLYYdOUl04hHU61IqkvbqOppBsnyApmG9QnTefQA8B1eqLXDBnAJlR6mKjDpW_Wbm7KZd9qZVAafPUev0-1m986W0wscwIlR0hKWa2P7DjrdPB6YZ7D5u6t6uCoxYjl5U47xAKluDxcHOaYB9lqjOVw0AX1UYexF8rk8QNE-ApFtoNjGUelqjxOGsVCBumT7fi3vr5pgONhpCM5-Tbs5l2oZxSLHqyd0IfhX2KNnEGsQiUKbQBW1YNkMA4ikxiixT7oeANiZx7Jsy9mcBMZEAPn7CTn4iTf76TndCTn4SSbQyx3Q9GTVn3kOBMIEbSrfonhqEmw6bz7awke6GMM71bzUzByX9A0qhDZwqQfI_KF">
+
 
 Sequence Diagrams of use cases we have implemented:
 
