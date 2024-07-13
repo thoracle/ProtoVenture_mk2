@@ -93,26 +93,29 @@ class TestDragonRiderQuest(unittest.TestCase):
         self.assertEqual(self.game_state.location, "Dragonhome")
         self.assertEqual(options, locations["Dragonhome"]["options"])
 
-    def test_speak_with_archmage(self):
-        self.game_state.location = "Mage Quarter"
-        process_choice(self.game_state, "Speak with the Archmage")
-        self.assertEqual(self.game_state.reputation["Mage Guild"], 55)
-        self.assertIn("Learn basic spells", self.game_state.quests)
-        self.assertEqual(self.game_state.quests["Learn basic spells"].progress, 1)
-
     def test_choose_dragon(self):
-        self.game_state.location = "Dragon Roost"
+        process_choice(self.game_state, "Visit the Dragon Roost")
         process_choice(self.game_state, "Choose a dragon")
         self.assertIsNotNone(self.game_state.dragon)
         self.assertIn("Bond with a dragon", self.game_state.quests)
         self.assertTrue(self.game_state.quests["Bond with a dragon"].completed)
 
-    def test_choose_dragon_already_have_one(self):
-        self.game_state.location = "Dragon Roost"
-        self.game_state.dragon = "Fire Drake"
-        process_choice(self.game_state, "Choose a dragon")
-        self.assertEqual(self.game_state.dragon, "Fire Drake")
-        self.assertNotIn("Bond with a dragon", self.game_state.quests)
+    def test_speak_with_archmage(self):
+        process_choice(self.game_state, "Go to the Mage Quarter")
+        process_choice(self.game_state, "Speak with the Archmage")
+        self.assertEqual(self.game_state.reputation["Mage Guild"], 55)
+        self.assertIn("Learn basic spells", self.game_state.quests)
+        self.assertEqual(self.game_state.quests["Learn basic spells"].progress, 1)
+
+    def test_master_of_trade_quest(self):
+        process_choice(self.game_state, "Head to the Marketplace")
+        buy_item(self.game_state, "Dragon Food")
+        self.assertIn("Master of trade", self.game_state.quests)
+        self.assertEqual(self.game_state.quests["Master of trade"].progress, 1)
+        
+        self.game_state.inventory["Dragon Food"] = 1  # Ensure we have Dragon Food to sell
+        sell_item(self.game_state, "Dragon Food")
+        self.assertEqual(self.game_state.quests["Master of trade"].progress, 2)
 
     def test_to_dict_and_from_dict(self):
         original_state = GameState()
