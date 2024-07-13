@@ -18,6 +18,12 @@ class TestDragonRiderQuest(unittest.TestCase):
         self.assertEqual(self.game_state.inventory.get("Spell Book", 0), 1)
         self.assertIn("Study your Spell Book", self.game_state.quests)
 
+    def test_buy_dragon_food(self):
+        buy_item(self.game_state, "Dragon Food")
+        self.assertEqual(self.game_state.inventory["Gold"], 80)
+        self.assertEqual(self.game_state.inventory.get("Dragon Food", 0), 1)
+        self.assertIn("Feed your dragon", self.game_state.quests)
+
     def test_buy_item_not_enough_gold(self):
         self.game_state.inventory["Gold"] = 10
         buy_item(self.game_state, "Spell Book")
@@ -56,7 +62,6 @@ class TestDragonRiderQuest(unittest.TestCase):
         self.assertEqual(options, locations["Marketplace"]["options"])
 
     def test_change_location(self):
-        self.game_state.location = "Dragonhome"
         options = process_choice(self.game_state, "Go to the Mage Quarter")
         self.assertEqual(self.game_state.location, "Mage Quarter")
         self.assertEqual(options, locations["Mage Quarter"]["options"])
@@ -70,28 +75,39 @@ class TestDragonRiderQuest(unittest.TestCase):
         self.assertEqual(options, locations["Dragonhome"]["options"])
 
     def test_speak_with_archmage(self):
+        self.game_state.location = "Mage Quarter"
         process_choice(self.game_state, "Speak with the Archmage")
         self.assertEqual(self.game_state.reputation["Mage Guild"], 55)
         self.assertIn("Learn basic spells", self.game_state.quests)
 
     def test_choose_dragon(self):
+        self.game_state.location = "Dragon Roost"
         process_choice(self.game_state, "Choose a dragon")
         self.assertIsNotNone(self.game_state.dragon)
         self.assertEqual(self.game_state.reputation["Dragon Riders"], 60)
         self.assertIn("Bond with a dragon", self.game_state.quests)
 
     def test_choose_dragon_already_have_one(self):
+        self.game_state.location = "Dragon Roost"
         self.game_state.dragon = "Fire Drake"
         process_choice(self.game_state, "Choose a dragon")
         self.assertEqual(self.game_state.dragon, "Fire Drake")
         self.assertEqual(self.game_state.reputation["Dragon Riders"], 50)
         self.assertNotIn("Bond with a dragon", self.game_state.quests)
 
-    def test_buy_dragon_food(self):
-        process_choice(self.game_state, "Buy Dragon Food")
-        self.assertEqual(self.game_state.inventory["Gold"], 80)
-        self.assertEqual(self.game_state.inventory.get("Dragon Food", 0), 1)
-        self.assertIn("Feed your dragon", self.game_state.quests)
+    def test_to_dict_and_from_dict(self):
+        original_state = GameState()
+        original_state.dragon = "Fire Drake"
+        original_state.quests = ["Learn basic spells"]
+        state_dict = original_state.to_dict()
+        
+        new_state = GameState.from_dict(state_dict)
+        self.assertEqual(new_state.location, original_state.location)
+        self.assertEqual(new_state.reputation, original_state.reputation)
+        self.assertEqual(new_state.dragon, original_state.dragon)
+        self.assertEqual(new_state.inventory, original_state.inventory)
+        self.assertEqual(new_state.message, original_state.message)
+        self.assertEqual(new_state.quests, original_state.quests)
 
 if __name__ == '__main__':
     unittest.main()
