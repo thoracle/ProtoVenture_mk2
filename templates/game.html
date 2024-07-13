@@ -101,6 +101,7 @@
             </div>
             <div class="options">
                 <form method="POST" action="{{ url_for('game') }}">
+                    <input type="hidden" name="current_tab" id="current_tab" value="Inventory">
                     {% for option in options %}
                         <button type="submit" name="choice" value="{{ option }}" class="option-btn">{{ option }}</button>
                     {% endfor %}
@@ -112,7 +113,7 @@
                 <h2>Player Info</h2>
             </div>
             <div class="tab">
-                <button class="tablinks" onclick="openTab(event, 'Inventory')" id="defaultOpen">Inventory</button>
+                <button class="tablinks" onclick="openTab(event, 'Inventory')">Inventory</button>
                 <button class="tablinks" onclick="openTab(event, 'Faction')">Faction</button>
                 <button class="tablinks" onclick="openTab(event, 'Quests')">Quests</button>
             </div>
@@ -163,10 +164,13 @@
         }
         document.getElementById(tabName).style.display = "block";
         evt.currentTarget.className += " active";
+        document.getElementById("current_tab").value = tabName;
     }
 
-    // Get the element with id="defaultOpen" and click on it
-    document.getElementById("defaultOpen").click();
+    // Set the initial tab based on the value from the server
+    document.addEventListener('DOMContentLoaded', (event) => {
+        openTab({currentTarget: document.querySelector(`button[onclick="openTab(event, '{{ current_tab }}')"]`)}, '{{ current_tab }}');
+    });
     </script>
 </body>
 </html>
